@@ -1,0 +1,2 @@
+# コンテナの起動
+docker run --name apachetest01 -d -p 8080:80 -v C:\Users\okane\Desktop\HTMLTest:/usr/local/apache2/htdocs httpd

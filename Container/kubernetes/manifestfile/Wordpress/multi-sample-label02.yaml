@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-pods02
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      label1: wordpress-01
+  template:
+    metadata:
+      labels:
+        label1: wordpress-01
+    spec:
+      containers:
+      - name: wordpress-container
+        image: wordpress:latest
+        ports:
+         - containerPort: 80
+           name: wordpress
+        env:
+         - name: WORDPRESS_DB_HOST
+           value: mysqlservice01:3306
+         - name: WORDPRESS_DB_PASSWORD
+           value: P@ssw0rd
+         - name: WORDPRESS_DB_USER
+           value: root
+         - name: WORDPRESS_DB_NAME
+           value: wordpress
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress
+  labels:
+    label1: wordpress-01
+spec:
+  type: LoadBalancer
+  ports:
+   - port: 80
+  selector:
+    label1: wordpress-01

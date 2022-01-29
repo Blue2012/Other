@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx01
+spec:
+  selector:
+    matchLabels:
+      app: testnginx01
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: testnginx01
+    spec:
+      containers:
+       - name: nginxtestpod01
+         image: nginx:1.25
+         ports:
+         - containerPort: 80

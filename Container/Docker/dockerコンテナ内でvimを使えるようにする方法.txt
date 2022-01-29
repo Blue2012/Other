@@ -1,0 +1,34 @@
+■問題点
+dockerコンテナ内にSSH（bash）でアクセスする際、vimなどのエディタが使えない場合がある
+
+■解決策
+
+[1]root権限でコンテナ内にSSHアクセスする（ディストリビューションに注意）
+まず、CentOS上のbitnami版nginxのコンテナイメージを利用していたのだが、
+コンテナイメージ自体はdebian系のディストリビューションで構成されたものであり、
+yumではなく、apt-getしか利用することが出来なかった。
+（OSがCentOSであったため、yumが使えないことにつまずいていた）
+
+また、この際に注意が必要なのはコンテナ内にアクセスする際には以下のコマンド例を参考にして、
+root権限でログインする必要があるという点に留意すること。
+※でないとログインした際にapt-getする権限がないと実行拒否されるケースがある。
+
+【コマンド例】
+docker exec -it --user root {コンテナ名} /bin/bash
+
+【簡略系】
+docker exec -it -U root {コンテナ名} bash
+
+[2]apt-getする際にリポジトリのupdateを実行する
+
+以下の2サイトを参考にリポジトリをupdateした後、vimをインストールすることで使えるようになった。
+
+<参考>DockerのUbuntuイメージでapt-getするには
+https://qiita.com/pochy9n/items/69ab8fc071c187a1f5f8
+
+<参考>Docker — docker コンテナの中で vim が使えない場合
+https://qiita.com/YumaInaura/items/3432cc3f8a8553e05a6e
+
+【コマンド例】
+apt-get update
+apt-get install vim

@@ -1,0 +1,38 @@
+# Dockerネットワーク作成
+docker network create redminepd01
+
+# Redmine用MySQLのコンテナ作成
+docker run --name mysqlpd01 -dit --net=redminepd01 `
+-e MYSQL_ROOT_PASSWORD=P@ssw0rd -e MYSQL_DATABASE=redminedb `
+-e MYSQL_USER=redminepd -e MYSQL_PASSWORD=P@ssw0rd `
+mysql --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci `
+--default-authentication-plugin=mysql_native_password
+
+# Redmineのコンテナ作成
+docker run --name redminetest01 -dit --net=redminepd01 `
+-p 8086:3000 -e REDMINE_DB_MYSQL=mysqlpd01 `
+-e REDMINE_DB_DATABASE=redminedb `
+-e REDMINE_DB_USERNAME=redminepd `
+-e REDMINE_DB_PASSWORD=P@ssw0rd redmine
+
+# Dockerネットワーク作成
+docker network create redminepd02
+
+# Redmine用MySQLのコンテナ作成
+docker run --name mariadb01 -dit --net=redminepd02 `
+-e MYSQL_ROOT_PASSWORD=P@ssw0rd -e MYSQL_DATABASE=redminemariadb `
+-e MYSQL_USER=redminemaripd -e MYSQL_PASSWORD=P@ssw0rd `
+mariadb --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci `
+--default-authentication-plugin=mysql_native_password
+
+# Redmineのコンテナ作成
+docker run --name redminetest01 -dit --net=redminepd02 `
+-p 8087:3000 -e REDMINE_DB_MYSQL=mariadb01 `
+-e REDMINE_DB_DATABASE=redminemariadb `
+-e REDMINE_DB_USERNAME=redminemaripd `
+-e REDMINE_DB_PASSWORD=P@ssw0rd redmine
+
+
+
+
+
